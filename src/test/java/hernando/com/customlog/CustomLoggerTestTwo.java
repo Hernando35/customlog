@@ -21,8 +21,8 @@ import org.junit.jupiter.api.io.TempDir;
 	@BeforeEach
 	void setUp() {
 		// Initialize your CustomLogger instance here
-		logger = CustomLogger.getInstance(CustomLoggerTestTwo.class);
-		logger.setLogFilePath("C:\\config\\application.log");
+		logger = CustomLogger.getInstance(CustomLoggerTestTwo.class.getSimpleName());
+		logger.setLogFileOutPut("C:\\config\\application.log");
 	}
 
 	@Test
@@ -52,7 +52,7 @@ import org.junit.jupiter.api.io.TempDir;
 	@Test
 	void testLoadProperties() {
 		// Test loading properties from a test properties file
-		logger.setLogFilePath("C:\\config\\application.log");
+		logger.setLogFileOutPut("C:\\config\\application.log");
 		Properties properties = logger.loadProperties("C:\\config\\logging.properties");
 		properties.setProperty("logLevel", "ALL");
 		String level = properties.getProperty("logLevel");
@@ -68,7 +68,7 @@ import org.junit.jupiter.api.io.TempDir;
 		String newLogFilePath = tempDir.resolve("C:\\config\\application.log").toString();
 
 		// Set a new log file path
-		logger.setLogFilePath(newLogFilePath);
+		logger.setLogFileOutPut(newLogFilePath);
 
 		// Verify that the log file path has been updated and a new log file has been
 		// created

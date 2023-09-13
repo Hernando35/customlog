@@ -46,7 +46,7 @@ public class LoggerTest {
 			testProperties.store(output, null);
 
 			// Set the logFilePath to the temporary file path
-			customLogger.setLogFilePath(tempFilePath);
+			customLogger.setLogFileOutPut(tempFilePath);
 
 			// Access and verify the properties of the customLogger
 			assertNotNull(customLogger);
