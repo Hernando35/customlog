@@ -37,7 +37,7 @@ public class LoggerTest {
 	@Test
 	public void testConstructorWithValidPropertiesFile() {
 		// Create a temporary properties file for testing
-		String tempFilePath = "temp_logging.properties";
+		String tempFilePath = "C:\\config\\application.log";
 		Properties testProperties = new Properties();
 		testProperties.setProperty("logLevel", "INFO");
 		testProperties.setProperty("customLogFormatter", "com.log.hernando.LogFormatter");
