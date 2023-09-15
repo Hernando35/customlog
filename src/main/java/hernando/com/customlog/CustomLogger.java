@@ -50,26 +50,25 @@ public class CustomLogger implements AppLogger {
 	private static final Formatter DEFAULT_LOG_FORMATTER = new LogFormatter();
 	private Formatter logFormatter = DEFAULT_LOG_FORMATTER;
 	private String logFileOutPut;
-	private static CustomLogger instance;
-	private String loggerName;
 
 	/**
-	 * Constructs a new instance of CustomLogger with the specified logger name.
-	 *
-	 * @param loggerName The name of the logger.
+	 * The inner static wrapper class responsible for holding the single instance of
+	 * CustomLogger to ensure thread-safe lazy initialization using the Singleton
+	 * pattern.
 	 */
-	private CustomLogger(String loggerName) {
-		this.loggerName = loggerName;
-		configureLogger();
+	private static class CustomLoggerWrapper {
+		/**
+		 * The single instance of CustomLogger.
+		 */
+		private static final CustomLogger INSTANCE = new CustomLogger();
 	}
 
 	/**
-	 * Gets the name of the logger.
+	 * Constructs a new instance of CustomLogger.
 	 *
-	 * @return The name of the logger.
 	 */
-	public String getLoggerName() {
-		return loggerName;
+	private CustomLogger() {
+		configureLogger();
 	}
 
 	/**
@@ -79,15 +78,6 @@ public class CustomLogger implements AppLogger {
 	 */
 	public String getLogFileOutPut() {
 		return logFileOutPut;
-	}
-
-	/**
-	 * Sets the name of the logger.
-	 *
-	 * @param loggerName The new name for the logger.
-	 */
-	public void setLoggerName(String loggerName) {
-		this.loggerName = loggerName;
 	}
 
 	/**
@@ -125,18 +115,13 @@ public class CustomLogger implements AppLogger {
 	}
 
 	/**
-	 * Gets an instance of CustomLogger with the specified logger name. This method
-	 * ensures that there is only one instance per logger name.
+	 * Gets an instance of CustomLogger. This method ensures that there is only one
+	 * instance at the server location.
 	 *
-	 * @param loggerName The name of the logger.
 	 * @return An instance of CustomLogger.
 	 */
-	public static synchronized CustomLogger getInstance(String loggerName) {
-		if (instance == null) {
-			instance = new CustomLogger(loggerName);
-		}
-		instance.setLoggerName(loggerName);
-		return instance;
+	public static CustomLogger getInstance() {
+		return CustomLoggerWrapper.INSTANCE;
 	}
 
 	/**
@@ -147,7 +132,7 @@ public class CustomLogger implements AppLogger {
 	 */
 	public void info(String message, Object... args) {
 		if (logger.isLoggable(Level.INFO)) {
-			logger.log(Level.INFO, messages(loggerName, message), args);
+			logger.log(Level.INFO, message, args);
 		}
 	}
 
@@ -159,7 +144,7 @@ public class CustomLogger implements AppLogger {
 	 */
 	public void debug(String message, Object... args) {
 		if (logger.isLoggable(Level.FINE)) {
-			logger.log(Level.FINE, messages(loggerName, message), args);
+			logger.log(Level.FINE, message, args);
 		}
 	}
 
@@ -171,7 +156,7 @@ public class CustomLogger implements AppLogger {
 	 */
 	public void warn(String message, Object... args) {
 		if (logger.isLoggable(Level.WARNING)) {
-			logger.log(Level.WARNING, messages(loggerName, message), args);
+			logger.log(Level.WARNING, message, args);
 		}
 	}
 
@@ -190,26 +175,8 @@ public class CustomLogger implements AppLogger {
 			StringBuilder sb = new StringBuilder();
 			exception.printStackTrace(pw);
 			String stackTrace = sw.toString();
-			logger.log(Level.SEVERE,
-					sb.append(messages(loggerName, message)).append(Constants.ENTER).append(stackTrace).toString(),
-					args);
+			logger.log(Level.SEVERE, sb.append(message).append(Constants.ENTER).append(stackTrace).toString(), args);
 		}
-	}
-
-	/**
-	 * Formats a log message with the logger name, if provided, and the specified
-	 * message.
-	 *
-	 * @param loggerName The name of the logger, or null if no logger name is
-	 *                   specified.
-	 * @param message    The log message to be formatted.
-	 * @return A formatted log message that includes the logger name (if provided)
-	 *         and the message.
-	 */
-	private String messages(String loggerName, String message) {
-		StringBuilder sb = new StringBuilder(Constants.OPEN_BRACKETS);
-		String className = loggerName != null ? sb.append(loggerName).append(Constants.CLOSE_BRACKETS).toString() : "";
-		return className.concat(message);
 	}
 
 	/**
@@ -218,8 +185,8 @@ public class CustomLogger implements AppLogger {
 	 *
 	 * @param logFilePath The path to the log file.
 	 */
-	public void setLogFileOutPut(final String logFilePath) {
-		this.logFileOutPut = logFilePath;
+	public void setLogFileOutPut(final String logFileOutPut) {
+		this.logFileOutPut = logFileOutPut;
 		// Remove existing handlers
 		Handler[] handlers = logger.getHandlers();
 		for (Handler handler : handlers) {
@@ -228,7 +195,7 @@ public class CustomLogger implements AppLogger {
 		}
 		// add custom file handler with the updated log file path
 		try {
-			FileHandler fileHandler = new CustomFileHandler(logFilePath, logFormatter);
+			FileHandler fileHandler = new CustomFileHandler(logFileOutPut, logFormatter);
 			// Add custom formatter
 			fileHandler.setFormatter(logFormatter);
 			// Add custom filter
@@ -256,5 +223,4 @@ public class CustomLogger implements AppLogger {
 		}
 		return properties;
 	}
-
 }

@@ -9,7 +9,7 @@ import java.util.logging.LogRecord;
 import org.junit.jupiter.api.Test;
 
 public class LogHandlerTest {
-	private static final CustomLogger logger = CustomLogger.getInstance(LogHandlerTest.class.getSimpleName());
+	private static final CustomLogger logger = CustomLogger.getInstance();
 
 	@Test
 	public void testLogger() {

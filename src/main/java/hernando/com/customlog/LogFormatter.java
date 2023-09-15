@@ -37,19 +37,58 @@ public class LogFormatter extends Formatter {
 	 * @param record  The log record containing the message and parameters.
 	 */
 	private void setLogParameters(StringBuilder builder, LogRecord record) {
-		// Check if there are parameters (variables) to include
 		Object[] parameters = record.getParameters();
-		if (parameters != null && parameters.length > 0) {
-			String message = record.getMessage();
-			String[] parts = message.split(Constants.SPLIT);
-			for (int i = 0; i < parts.length; i++) {
-				builder.append(parts[i]);
-				if (i < parameters.length) {
-					builder.append(parameters[i]);
-				}
-			}
+		String message = record.getMessage();
+
+		if (parameters != null && parameters.length > 0 && message.contains("{}")) {
+			appendParametersWithPlaceholders(builder, message, parameters);
+		} else if (parameters != null && parameters.length == 1 && !message.contains("{}")) {
+			appendSingleParameter(builder, message, parameters[0]);
 		} else {
-			builder.append(SPACE).append(record.getMessage());
+			appendDefaultMessage(builder, message);
 		}
+	}
+
+	/**
+	 * Appends parameters to the log message with placeholders.
+	 *
+	 * @param builder    The StringBuilder to which the log message is appended.
+	 * @param message    The log message.
+	 * @param parameters The message parameters.
+	 */
+	private void appendParametersWithPlaceholders(StringBuilder builder, String message, Object[] parameters) {
+		String[] parts = message.split(Constants.SPLIT);
+		for (int i = 0; i < parts.length; i++) {
+			builder.append(parts[i]);
+			if (i < parameters.length) {
+				builder.append(parameters[i]);
+			}
+		}
+		if (parameters.length > parts.length) {
+			builder.append(SPACE).append(Constants.OPEN_BRACKETS).append(parameters[parts.length])
+					.append(Constants.CLOSE_BRACKETS);
+		}
+	}
+
+	/**
+	 * Appends a single parameter to the log message without placeholders.
+	 *
+	 * @param builder   The StringBuilder to which the log message is appended.
+	 * @param message   The log message.
+	 * @param parameter The single message parameter.
+	 */
+	private void appendSingleParameter(StringBuilder builder, String message, Object parameter) {
+		builder.append(message).append(SPACE).append(Constants.OPEN_BRACKETS).append(parameter)
+				.append(Constants.CLOSE_BRACKETS);
+	}
+
+	/**
+	 * Appends the default log message.
+	 *
+	 * @param builder The StringBuilder to which the log message is appended.
+	 * @param message The log message.
+	 */
+	private void appendDefaultMessage(StringBuilder builder, String message) {
+		builder.append(SPACE).append(message);
 	}
 }

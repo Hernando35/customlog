@@ -21,7 +21,7 @@ import org.junit.jupiter.api.io.TempDir;
 	@BeforeEach
 	void setUp() {
 		// Initialize your CustomLogger instance here
-		logger = CustomLogger.getInstance(CustomLoggerTestTwo.class.getSimpleName());
+		logger = CustomLogger.getInstance();
 		logger.setLogFileOutPut("C:\\config\\application.log");
 	}
 

@@ -20,14 +20,14 @@ public class LoggerTest {
 
 	@BeforeEach
 	public void setup() {
-		customLogger = createCustomLoggerInstance("TestLogger");
+		customLogger = createCustomLoggerInstance();
 	}
 
-	private CustomLogger createCustomLoggerInstance(String loggerName) {
+	private CustomLogger createCustomLoggerInstance() {
 		try {
-			Constructor<CustomLogger> constructor = CustomLogger.class.getDeclaredConstructor(String.class);
+			Constructor<CustomLogger> constructor = CustomLogger.class.getDeclaredConstructor();
 			constructor.setAccessible(true);
-			return constructor.newInstance(loggerName);
+			return constructor.newInstance();
 		} catch (Exception e) {
 			fail("Exception occurred while creating CustomLogger instance: " + e.getMessage());
 			return null;
