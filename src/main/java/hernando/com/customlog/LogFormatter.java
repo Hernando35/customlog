@@ -42,8 +42,6 @@ public class LogFormatter extends Formatter {
 
 		if (parameters != null && parameters.length > 0 && message.contains("{}")) {
 			appendParametersWithPlaceholders(builder, message, parameters);
-		} else if (parameters != null && parameters.length == 1 && !message.contains("{}")) {
-			appendSingleParameter(builder, message, parameters[0]);
 		} else {
 			appendDefaultMessage(builder, message);
 		}
@@ -68,18 +66,6 @@ public class LogFormatter extends Formatter {
 			builder.append(SPACE).append(Constants.OPEN_BRACKETS).append(parameters[parts.length])
 					.append(Constants.CLOSE_BRACKETS);
 		}
-	}
-
-	/**
-	 * Appends a single parameter to the log message without placeholders.
-	 *
-	 * @param builder   The StringBuilder to which the log message is appended.
-	 * @param message   The log message.
-	 * @param parameter The single message parameter.
-	 */
-	private void appendSingleParameter(StringBuilder builder, String message, Object parameter) {
-		builder.append(message).append(SPACE).append(Constants.OPEN_BRACKETS).append(parameter)
-				.append(Constants.CLOSE_BRACKETS);
 	}
 
 	/**

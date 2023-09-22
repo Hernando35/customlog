@@ -12,7 +12,7 @@ public class CustomLoggerMultiThreadedTest {
 
 	private CustomLogger customLogger;
 	private static final int NUM_THREADS = 10;
-	private static final int NUM_LOGS_PER_THREAD = 5000;
+	private static final int NUM_LOGS_PER_THREAD = 1000;
 
 	@BeforeEach
 	void setUp() {

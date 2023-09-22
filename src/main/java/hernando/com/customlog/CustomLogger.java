@@ -46,7 +46,8 @@ import java.util.logging.Logger;
 public class CustomLogger implements AppLogger {
 	private static final Logger logger = Logger.getLogger(CustomLogger.class.getName());
 	private static final String DEFAULT_LOG_LEVEL = "ALL";
-	private static final String DEFAULT_LOG_FILE_PROPS = "C:\\config\\logging.properties";
+	private static final String DEFAULT_LOG_FILE_PROPS = "D:\\config\\logging.properties";
+	private static final String DEFAULT_OUTPUT_LOG_FILE = "C:\\logs\\plugins.log";
 	private static final Formatter DEFAULT_LOG_FORMATTER = new LogFormatter();
 	private Formatter logFormatter = DEFAULT_LOG_FORMATTER;
 	private String logFileOutPut;
@@ -92,6 +93,7 @@ public class CustomLogger implements AppLogger {
 			logger.setLevel(Level.parse(logLevel));
 			String customLogFormatterClassName = properties.getProperty("customLogFormatter");
 			setCustomLogFormatter(customLogFormatterClassName);
+			setLogFileOutPut(DEFAULT_OUTPUT_LOG_FILE);
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, "Error occurred while configuring the logger", e);
 		}
@@ -176,6 +178,26 @@ public class CustomLogger implements AppLogger {
 			exception.printStackTrace(pw);
 			String stackTrace = sw.toString();
 			logger.log(Level.SEVERE, sb.append(message).append(Constants.ENTER).append(stackTrace).toString(), args);
+		}
+	}
+	
+   /**
+    * 
+    * @param id
+    * @param caseNumber
+    * @param message
+    * @param exception
+    * @param args
+    */
+	public void error(String id, String caseNumber, String message, Throwable exception, Object... args) {
+		if (logger.isLoggable(Level.SEVERE)) {
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			StringBuilder sb = new StringBuilder();
+			exception.printStackTrace(pw);
+			String stackTrace = sw.toString();
+			logger.log(Level.SEVERE, sb.append(id).append(caseNumber).append(message).append(Constants.ENTER)
+					.append(stackTrace).toString(), args);
 		}
 	}
 
