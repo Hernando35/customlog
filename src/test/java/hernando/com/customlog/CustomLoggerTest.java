@@ -41,8 +41,10 @@ import org.junit.jupiter.api.io.TempDir;
 
 	@Test
 	void testWarnLogging() {
+		int val = 8;
 		logger.warn("This is a warning message.");
-		// Add assertions here to verify the log content or file contents
+		logger.warn("This is a warning message {}", val);
+		logger.warn("This is a warning message {}", val, "text");
 	}
 
 	@Test
